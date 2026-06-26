@@ -23,6 +23,8 @@ import { ConnectedAccountMetadataService } from 'src/engine/metadata-modules/con
 import { SendEmailOutputDTO } from 'src/modules/messaging/message-outbound-manager/dtos/send-email-output.dto';
 import { SendEmailInput } from 'src/modules/messaging/message-outbound-manager/dtos/send-email.input';
 import { SendEmailService } from 'src/modules/messaging/message-outbound-manager/services/send-email.service';
+import { isDefined } from 'twenty-shared/utils';
+import { isNonEmptyString } from '@sniptt/guards';
 
 @MetadataResolver()
 @UsePipes(ResolverValidationPipe)
@@ -79,7 +81,13 @@ export class SendEmailResolver {
 
       const { data } = result;
 
-      const sendResult = await this.sendEmailService.sendComposedEmail(data);
+      const sendResult = isDefined(input.draftMessageId)
+        ? await this.sendEmailService.sendComposedDraft(
+            data,
+            input.draftMessageId,
+            workspace.id,
+          )
+        : await this.sendEmailService.sendComposedEmail(data);
 
       if (data.shouldPersistMessage) {
         await this.sendEmailService.persistSentMessage(
@@ -88,6 +96,25 @@ export class SendEmailResolver {
           workspace.id,
         );
       }
+
+      if (isDefined(input.draftMessageId)) {
+        await this.sendEmailService.deleteSentDraft(
+          input.draftMessageId,
+          workspace.id,
+        );
+      }
+
+      const sentMessageExternalId =
+        sendResult.messageExternalId ?? sendResult.headerMessageId;
+
+      const messageThreadId =
+        isDefined(input.draftMessageId) &&
+        isNonEmptyString(sentMessageExternalId)
+          ? await this.sendEmailService.getSentMessageThreadId(
+              sentMessageExternalId,
+              workspace.id,
+            )
+          : undefined;
 
       const attachmentFileIds = (input.files ?? []).map((file) => file.id);
 
@@ -98,7 +125,7 @@ export class SendEmailResolver {
         });
       }
 
-      return { success: true };
+      return { success: true, messageThreadId };
     } catch (error) {
       if (error instanceof ForbiddenException) {
         throw error;

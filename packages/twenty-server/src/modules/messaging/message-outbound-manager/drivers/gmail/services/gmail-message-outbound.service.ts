@@ -67,6 +67,66 @@ export class GmailMessageOutboundService implements MessageOutboundDriver {
     });
   }
 
+  async sendDraft(
+    draftExternalId: string,
+    sendMessageInput: SendMessageInput,
+    connectedAccount: ConnectedAccountEntity,
+  ): Promise<SendMessageResult> {
+    const sendResult = await this.sendMessage(
+      sendMessageInput,
+      connectedAccount,
+    );
+
+    await this.deleteDraftByMessageId(connectedAccount, draftExternalId);
+
+    return sendResult;
+  }
+
+  private async deleteDraftByMessageId(
+    connectedAccount: ConnectedAccountEntity,
+    messageId: string,
+  ): Promise<void> {
+    const oAuth2Client = await this.googleOAuth2ClientProvider.getClient(
+      connectedAccount.id,
+    );
+
+    const gmailClient = google.gmail({ version: 'v1', auth: oAuth2Client });
+
+    const draftId = await this.findDraftIdByMessageId(gmailClient, messageId);
+
+    if (isDefined(draftId)) {
+      await gmailClient.users.drafts.delete({ userId: 'me', id: draftId });
+    }
+  }
+
+  private async findDraftIdByMessageId(
+    gmailClient: gmail_v1.Gmail,
+    messageId: string,
+  ): Promise<string | undefined> {
+    let pageToken: string | undefined = undefined;
+
+    do {
+      const { data }: { data: gmail_v1.Schema$ListDraftsResponse } =
+        await gmailClient.users.drafts.list({
+          userId: 'me',
+          maxResults: 500,
+          pageToken,
+        });
+
+      const draft = (data.drafts ?? []).find(
+        (currentDraft) => currentDraft.message?.id === messageId,
+      );
+
+      if (isDefined(draft?.id)) {
+        return draft.id;
+      }
+
+      pageToken = data.nextPageToken ?? undefined;
+    } while (isDefined(pageToken));
+
+    return undefined;
+  }
+
   private async composeGmailMessage(
     connectedAccount: ConnectedAccountEntity,
     sendMessageInput: SendMessageInput,

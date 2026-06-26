@@ -2434,6 +2434,7 @@ export interface DuplicatedDashboard {
 export interface SendEmailOutput {
     success: Scalars['Boolean']
     error?: Scalars['String']
+    messageThreadId?: Scalars['String']
     __typename: 'SendEmailOutput'
 }
 
@@ -5570,6 +5571,7 @@ export interface DuplicatedDashboardGenqlSelection{
 export interface SendEmailOutputGenqlSelection{
     success?: boolean | number
     error?: boolean | number
+    messageThreadId?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -6546,7 +6548,7 @@ export interface DeleteSsoInput {identityProviderId: Scalars['UUID']}
 
 export interface EditSsoInput {id: Scalars['UUID'],status: SSOIdentityProviderStatus}
 
-export interface SendEmailInput {connectedAccountId: Scalars['String'],to: Scalars['String'],cc?: (Scalars['String'] | null),bcc?: (Scalars['String'] | null),subject: Scalars['String'],body: Scalars['String'],inReplyTo?: (Scalars['String'] | null),files?: (SendEmailAttachmentInput[] | null)}
+export interface SendEmailInput {connectedAccountId: Scalars['String'],to: Scalars['String'],cc?: (Scalars['String'] | null),bcc?: (Scalars['String'] | null),subject: Scalars['String'],body: Scalars['String'],inReplyTo?: (Scalars['String'] | null),draftMessageId?: (Scalars['String'] | null),files?: (SendEmailAttachmentInput[] | null)}
 
 export interface SendEmailAttachmentInput {id: Scalars['String'],name: Scalars['String']}
 
