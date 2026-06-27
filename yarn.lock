@@ -17268,7 +17268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-email/render@npm:1.2.3, @react-email/render@npm:^1.2.3":
+"@react-email/render@npm:1.2.3":
   version: 1.2.3
   resolution: "@react-email/render@npm:1.2.3"
   dependencies:
@@ -17283,15 +17283,29 @@ __metadata:
   linkType: hard
 
 "@react-email/render@npm:>=2.0.8":
-  version: 2.0.8
-  resolution: "@react-email/render@npm:2.0.8"
+  version: 2.0.9
+  resolution: "@react-email/render@npm:2.0.9"
   dependencies:
     html-to-text: "npm:^9.0.5"
     prettier: "npm:^3.5.3"
   peerDependencies:
     react: ^18.0 || ^19.0 || ^19.0.0-rc
     react-dom: ^18.0 || ^19.0 || ^19.0.0-rc
-  checksum: 10c0/183793beaab413523e1ffbf3e07b352e33c0b7b0912e6bee0da2aceb495f327694f98b55957255419cbcaf771c538f2b084580d4d3a78c92ccf7a5cad527f73c
+  checksum: 10c0/2b52d3122d9796b005ea1c65fc63c77f58e894dda87852c6064f49070248b3ec01a42d8e42a68c1ec4255b1a93b94d849be608f9d110f9b2bdb6afe0a04cf292
+  languageName: node
+  linkType: hard
+
+"@react-email/render@npm:^1.2.3":
+  version: 1.4.0
+  resolution: "@react-email/render@npm:1.4.0"
+  dependencies:
+    html-to-text: "npm:^9.0.5"
+    prettier: "npm:^3.5.3"
+    react-promise-suspense: "npm:^0.3.4"
+  peerDependencies:
+    react: ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^18.0 || ^19.0 || ^19.0.0-rc
+  checksum: 10c0/9c4572daa621d463e4095d79f5788148d906dd5df4f97422a99bf76a444a260faa7ec823ff1589183fe54edafbde2f9c4fa3b65576d6d1beffd19dec8b431d77
   languageName: node
   linkType: hard
 
