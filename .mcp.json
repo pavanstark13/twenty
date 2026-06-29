@@ -17,6 +17,14 @@
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"],
       "env": {}
+    },
+    "21st-dev-magic": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "API_KEY": "486fa6f4e65cc051df43581240da7509db30e8f40bc4775f10b83fdd064ba157"
+      }
     }
   }
 }
